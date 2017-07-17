@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-mongoose.Promise = global.promise
-mongoose.connection.on('error', console.error.bind(console,'connection_error:'))
+mongoose.Promise = global.Promise
 const DB_URL = process.env.NODE_ENV === 'test' ? "mongodb://localhost/test": "mongodb://localhost/btcdemo"
-mongoose.connect(DB_URL)
+const db = mongoose.createConnection(DB_URL)
+db.on('error', console.error.bind(console,'connection_error:'))
 console.log('DB Connect')
 module.exports = mongoose
