@@ -2,7 +2,8 @@ const mongoose = require('./mongoose');
 let blockSchema = new mongoose.Schema({
   number: {type: Number,unique: true, required: true},
   transactions: [],
-  prevHash: String,
+  prevHash: Number,
+  currentHash: Number,
   nonce: {type: Number, required: true}
 })
 
