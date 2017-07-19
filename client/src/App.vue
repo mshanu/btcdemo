@@ -1,6 +1,15 @@
 <template>
   <div id="app">
-    <BlockInput/>
+    <b-card no-block>
+      <b-tabs small card ref="tabs">
+        <b-tab title="Block Input">
+          <BlockInput/>
+        </b-tab>
+        <b-tab title="Blocks">
+          Blocks
+        </b-tab>
+      </b-tabs>
+    </b-card>
   </div>
 </template>
 
@@ -20,7 +29,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
 }
 .row {
   padding: 5px; 

@@ -1,10 +1,30 @@
-const mongoose = require('./mongoose');
+const mongoose = require('mongoose');
+const db = require('./db');
+
+let CounterSchema = new mongoose.Schema({
+  _id: {type: String, required: true},
+  seq: { type: Number, default: 0 }
+});
+let counter = db.model('Counter', CounterSchema);
+
 let blockSchema = new mongoose.Schema({
-  number: {type: Number,unique: true, required: true},
+  height: {type: Number,unique: true},
   transactions: [],
   prevHash: Number,
-  currentHash: Number,
+  hash: Number,
   nonce: {type: Number, required: true}
 })
 
-module.exports = mongoose.model('Block', blockSchema)
+blockSchema.pre('save', function(next) {
+  var doc = this;
+  counter.findByIdAndUpdate('blockHeight', {$inc: { seq: 1} },{new: true}, function(error, counter)   {
+    if(error) {
+      console.log(error)
+      return next(error);
+    }
+    doc.height = counter.seq;
+    next();
+  });
+});
+
+module.exports = db.model('Block', blockSchema)

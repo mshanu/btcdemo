@@ -6,5 +6,7 @@ let app = require('express')(),
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/block', block.create);
+app.post('/blocks', block.create);
+app.get('/blocks/last', block.last);
 
+http.listen(3000, () => console.log("Server listening "))

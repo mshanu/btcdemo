@@ -1,6 +1,8 @@
-const block = require('./../models/block.js');
+const Block = require('./../models/block.js');
 const handler = require('./handler');
-const create = (req,res) => block.save(req.body).then(handler(res).onSave).catch(handler(res).onError)
+const create = (req,res) => new Block(req.body).save().then(handler(res).sendResult).catch(handler(res).onError)
+const last = (req,res) => Block.findOne({}).sort({height: -1}).then(handler(res).sendResult).catch(handler(res).onError)
 module.exports = {
-  create: create
+  create: create,
+  last: last 
 }

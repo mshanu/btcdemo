@@ -1,8 +1,8 @@
 <template>
-  <b-card header="Block" class="mb-2"> 
+  <div>
     <div class="row">
       <div class="col-md-4">
-        <b-alert show>Previous Hash: <span class="spaced"> {{ this.previousBlock.number || '000000' }}</span> </b-alert> 
+        <b-alert show>Previous Hash: <span class="spaced"> {{ this.previousBlock.hash || '000000' }}</span> </b-alert> 
       </div>
     </div>
     <div class="row">
@@ -60,18 +60,29 @@
       <div class="col-md-4">
         <b-form-input v-model="currentHash" type="number" placeholder="hash" readonly class="spaced"/>
       </div>
+      <div class="col-md-4" v-if="validBlock()">
+        <b-button size="md" variant="success" @click="saveBlock">Valid - Save </b-button>
+      </div>
     </div>
-  </b-card>
+  </div>
 </template>
 <script>
 import axios from 'axios'
 let emptyTransaction = () => ({from: undefined, to: undefined, amount: undefined})
+let validHash = function (hash) {
+  let hashString = hash.toString()
+  let slicedHashString = hashString.slice(1, hashString.length)
+  return slicedHashString.indexOf('00') > -1
+}
 export default {
   data () {
     return {
       previousBlock: {},
       block: { transactions: [emptyTransaction(), emptyTransaction(), emptyTransaction()], nonce: undefined, hash: undefined }
     }
+  },
+  created () {
+    this.refresh()
   },
   methods: {
     getPrevHashPlusTxs () {
@@ -81,19 +92,25 @@ export default {
       return sumOfTransactions + previousBlackHash
     },
     saveBlock () {
-      axios.post('/block')
+      axios.post('/api/blocks', this.block)
         .then(this.refresh).catch(console.log)
     },
     refresh () {
-      axios.get('/block/last')
-        .then((block) => { this.previousBlock = block })
+      axios.get('/api/blocks/last')
+        .then((res) => { this.previousBlock = res.data })
         .catch(console.log)
+    },
+    validBlock () {
+      return this.block.hash && validHash(this.block.hash)
     }
   },
   computed: {
     currentHash: {
       get () {
-        if (this.block.nonce < 101) return null
+        if (this.block.nonce < 101) {
+          this.block.hash = null
+          return this.block.hash
+        }
         let prevHashPlusTx = this.getPrevHashPlusTxs()
         let nonce = this.block.nonce
         this.block.hash = Math.trunc((prevHashPlusTx / nonce) % 1 * 10000000)
