@@ -5,9 +5,7 @@
         <b-tab title="Block Input">
           <BlockInput/>
         </b-tab>
-        <b-tab title="Blocks">
-          Blocks
-        </b-tab>
+        <b-tab title="Blocks"><BlockList/> </b-tab>
       </b-tabs>
     </b-card>
   </div>
@@ -15,10 +13,12 @@
 
 <script>
 import BlockInput from './components/BlockInput'
+import BlockList from './components/BlockList'
 export default {
   name: 'app',
   components: {
-    BlockInput
+    BlockInput,
+    BlockList
   }
 }
 </script>

@@ -71,6 +71,9 @@ import axios from 'axios'
 let emptyTransaction = () => ({from: undefined, to: undefined, amount: undefined})
 let validHash = function (hash) {
   let hashString = hash.toString()
+  if (!hashString.match(/^[1-9]\d{5}[1-9]$/)) {
+    return false
+  }
   let slicedHashString = hashString.slice(1, hashString.length)
   return slicedHashString.indexOf('00') > -1
 }

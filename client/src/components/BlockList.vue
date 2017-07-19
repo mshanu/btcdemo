@@ -1,13 +1,11 @@
 <template>
   <div>
-    <h3> Block List </h3>
     <div class="row" v-for="block in blocks">
       <div class="col-md-6">
-        <label> Previous Hash: </label>
-        <label> Transactions : </label>
-        <label> Nonce: </label>
-        <b-card header="Block Number {{block.number}}" show-footer>
-          <small slot="footer" class="text-muted">Hash:  </small>
+        <b-card :header="'Hash: '+ block.hash" show-footer>
+          <label> Transactions : {{block.transactions.length}} </label>
+          <label> Nonce: {{block.nonce}} </label>
+          <small slot="footer" class="text-muted">Height: {{block.height}}  </small>
         </b-card>
       </div>
     </div>
@@ -20,13 +18,16 @@ export default {
     return {
       blocks: []
     }
-  }
-  created: {
+  },
+  created () {
     this.refresh()
   },
   methods: {
     refresh () {
-      axios.get('/block').then(blocks => this.blocks = blocks).catch(error => console.log(error));
+      axios.get('/api/blocks').then(blocks => { this.blocks = blocks.data }).catch(error => console.log(error))
+    },
+    showHash (block) {
+      return block.hash
     }
   }
 }

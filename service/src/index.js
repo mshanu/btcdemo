@@ -8,5 +8,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/blocks', block.create);
 app.get('/blocks/last', block.last);
+app.get('/blocks', block.list);
 
 http.listen(3000, () => console.log("Server listening "))
