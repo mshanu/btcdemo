@@ -5,7 +5,8 @@ let CounterSchema = new mongoose.Schema({
   _id: {type: String, required: true},
   seq: { type: Number, default: 0 }
 });
-let counter = db.model('Counter', CounterSchema);
+let Counter= db.model('Counter', CounterSchema);
+new Counter({_id:'height'}).save();
 
 let blockSchema = new mongoose.Schema({
   height: {type: Number,unique: true},
@@ -17,7 +18,8 @@ let blockSchema = new mongoose.Schema({
 
 blockSchema.pre('save', function(next) {
   var doc = this;
-  counter.findByIdAndUpdate('blockHeight', {$inc: { seq: 1} },{new: true}, function(error, counter)   {
+  Counter.findByIdAndUpdate('height', {$inc: { seq: 1} },{new: true}, function(error, counter)   {
+    console.log(arguments);
     if(error) {
       console.log(error)
       return next(error);
